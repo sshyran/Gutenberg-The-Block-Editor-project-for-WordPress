@@ -438,6 +438,7 @@ export default function Image( {
 	}
 
 	const borderProps = useBorderProps( attributes );
+	const isRounded = attributes.className?.includes( 'is-style-rounded' );
 
 	let img = (
 		// Disable reason: Image itself is not meant to be interactive, but
@@ -478,7 +479,7 @@ export default function Image( {
 	if ( canEditImage && isEditingImage ) {
 		img = (
 			<ImageEditor
-				borderProps={ borderProps }
+				borderProps={ isRounded ? undefined : borderProps }
 				url={ url }
 				width={ width }
 				height={ height }
