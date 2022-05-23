@@ -26,6 +26,7 @@ import { image as icon } from '@wordpress/icons';
  * Internal dependencies
  */
 import Image from './image';
+import { isMediaFileDeleted } from './utils';
 
 /**
  * Module constants
@@ -164,12 +165,19 @@ export function ImageEdit( {
 				url
 			)
 		);
+
 		// If the image block was not replaced with an embed,
+		// and it's not an external image,
+		// and it's been deleted from the database,
 		// clear the attributes and trigger the placeholder.
-		if ( ! isReplaced ) {
-			setAttributes( {
-				url: undefined,
-				id: undefined,
+		if ( id && ! isReplaced && ! isExternalImage( id, url ) ) {
+			isMediaFileDeleted( id ).then( ( isFileDeleted ) => {
+				if ( isFileDeleted ) {
+					setAttributes( {
+						url: undefined,
+						id: undefined,
+					} );
+				}
 			} );
 		}
 	}
