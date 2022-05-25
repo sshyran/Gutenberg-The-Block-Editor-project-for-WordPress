@@ -120,7 +120,7 @@ function gutenberg_render_elements_support_styles( $pre_render, $block ) {
 
 	$style = ".$class_name a{" . $link_color_declaration . ';}';
 
-	gutenberg_enqueue_block_support_styles( $style );
+	wp_enqueue_block_support_styles( $style );
 
 	return null;
 }
