@@ -15,6 +15,57 @@
  * @access private
  */
 class WP_Theme_JSON_6_1 extends WP_Theme_JSON_6_0 {
+	/**
+	 * Metadata for style properties.
+	 *
+	 * Each element is a direct mapping from the CSS property name to the
+	 * path to the value in theme.json & block attributes.
+	 */
+	const PROPERTIES_METADATA = array(
+		'background'                 => array( 'color', 'gradient' ),
+		'background-color'           => array( 'color', 'background' ),
+		'border-radius'              => array( 'border', 'radius' ),
+		'border-top-left-radius'     => array( 'border', 'radius', 'topLeft' ),
+		'border-top-right-radius'    => array( 'border', 'radius', 'topRight' ),
+		'border-bottom-left-radius'  => array( 'border', 'radius', 'bottomLeft' ),
+		'border-bottom-right-radius' => array( 'border', 'radius', 'bottomRight' ),
+		'border-color'               => array( 'border', 'color' ),
+		'border-width'               => array( 'border', 'width' ),
+		'border-style'               => array( 'border', 'style' ),
+		'border-top-color'           => array( 'border', 'top', 'color' ),
+		'border-top-width'           => array( 'border', 'top', 'width' ),
+		'border-top-style'           => array( 'border', 'top', 'style' ),
+		'border-right-color'         => array( 'border', 'right', 'color' ),
+		'border-right-width'         => array( 'border', 'right', 'width' ),
+		'border-right-style'         => array( 'border', 'right', 'style' ),
+		'border-bottom-color'        => array( 'border', 'bottom', 'color' ),
+		'border-bottom-width'        => array( 'border', 'bottom', 'width' ),
+		'border-bottom-style'        => array( 'border', 'bottom', 'style' ),
+		'border-left-color'          => array( 'border', 'left', 'color' ),
+		'border-left-width'          => array( 'border', 'left', 'width' ),
+		'border-left-style'          => array( 'border', 'left', 'style' ),
+		'color'                      => array( 'color', 'text' ),
+		'font-family'                => array( 'typography', 'fontFamily' ),
+		'font-size'                  => array( 'typography', 'fontSize' ),
+		'font-style'                 => array( 'typography', 'fontStyle' ),
+		'font-weight'                => array( 'typography', 'fontWeight' ),
+		'letter-spacing'             => array( 'typography', 'letterSpacing' ),
+		'line-height'                => array( 'typography', 'lineHeight' ),
+		'margin'                     => array( 'spacing', 'margin' ),
+		'margin-top'                 => array( 'spacing', 'margin', 'top' ),
+		'margin-right'               => array( 'spacing', 'margin', 'right' ),
+		'margin-bottom'              => array( 'spacing', 'margin', 'bottom' ),
+		'margin-left'                => array( 'spacing', 'margin', 'left' ),
+		'padding'                    => array( 'spacing', 'padding' ),
+		'padding-top'                => array( 'spacing', 'padding', 'top' ),
+		'padding-right'              => array( 'spacing', 'padding', 'right' ),
+		'padding-bottom'             => array( 'spacing', 'padding', 'bottom' ),
+		'padding-left'               => array( 'spacing', 'padding', 'left' ),
+		'text-decoration'            => array( 'typography', 'textDecoration' ),
+		'text-transform'             => array( 'typography', 'textTransform' ),
+		'filter'                     => array( 'filter', 'duotone' ),
+	);
+
 	const __EXPERIMENTAL_ELEMENT_BUTTON_CLASS_NAME = 'wp-element-button';
 
 	const ELEMENTS = array(
@@ -108,7 +159,7 @@ class WP_Theme_JSON_6_1 extends WP_Theme_JSON_6_0 {
 		'spacing'    => array(
 			'margin'   => null,
 			'padding'  => null,
-			'blockGap' => 'top',
+			'blockGap' => null,
 		),
 		'typography' => array(
 			'fontFamily'     => null,
@@ -182,38 +233,20 @@ class WP_Theme_JSON_6_1 extends WP_Theme_JSON_6_0 {
 				$block_rules     .= static::to_ruleset( $selector_duotone, $declarations_duotone );
 			}
 
-			// 4. Generate the rules for layout blockGap.
-			$has_block_gap_support = _wp_array_get( $this->theme_json, array( 'settings', 'spacing', 'blockGap' ) ) !== null;
-			if ( $has_block_gap_support ) {
-				$block_gap_value    = _wp_array_get( $node, array( 'spacing', 'blockGap' ), '0.5em' );
-				$layout_definitions = _wp_array_get( $this->theme_json, array( 'settings', 'layout', 'definitions' ), array() );
-
-				if ( $block_gap_value ) {
-					foreach( $layout_definitions as $layout_key => $layout_definition ) {
-						$declaration_layouts = array();
-						if( ! empty( $layout_definition['blockGapSelector'] ) && ! empty( $layout_definition['blockGapProp'] ) ) {
-							$declaration_layouts[] = array(
-								'name'  => $layout_definition['blockGapProp'],
-								'value' => $block_gap_value,
-							);
-							$layout_selector = static::ROOT_BLOCK_SELECTOR === $selector ?
-								$selector . ' ' . $layout_definition['blockGapSelector'] :
-								$selector . $layout_definition['blockGapSelector'];
-							$block_rules    .= static::to_ruleset( $layout_selector, $declaration_layouts );
-						}
-					}
-				}
-			}
-
 			if ( static::ROOT_BLOCK_SELECTOR === $selector ) {
 				$block_rules .= '.wp-site-blocks > .alignleft { float: left; margin-right: 2em; }';
 				$block_rules .= '.wp-site-blocks > .alignright { float: right; margin-left: 2em; }';
 				$block_rules .= '.wp-site-blocks > .aligncenter { justify-content: center; margin-left: auto; margin-right: auto; }';
 
+				$has_block_gap_support = _wp_array_get( $this->theme_json, array( 'settings', 'spacing', 'blockGap' ) ) !== null;
+				$block_gap_value       = _wp_array_get( $this->theme_json, array( 'styles', 'spacing', 'blockGap' ), '0.5em' );
 				if ( $has_block_gap_support ) {
 					$block_rules .= '.wp-site-blocks > * { margin-block-start: 0; margin-block-end: 0; }';
-					$block_rules .= '.wp-site-blocks > * + * { margin-block-start: var( --wp--style--block-gap ); }';
+					$block_rules .= ".wp-site-blocks > * + * { margin-block-start: $block_gap_value; }";
 				}
+
+				// Get root-level layout block gap styles.
+				$block_rules .= $this->get_layout_styles( $metadata );
 			}
 		}
 
@@ -420,6 +453,47 @@ class WP_Theme_JSON_6_1 extends WP_Theme_JSON_6_0 {
 		$settings     = _wp_array_get( $this->theme_json, array( 'settings' ) );
 		$declarations = static::compute_style_properties( $node, $settings );
 		$block_rules  = static::to_ruleset( $selector, $declarations );
+		$block_rules .= $this->get_layout_styles( $block_metadata );
+		return $block_rules;
+	}
+
+	/**
+	 * Get the CSS layout rules for a particular block from theme.json.
+	 *
+	 * @param array $block_metadata Metadata about the block to get styles for.
+	 *
+	 * @return string Layout styles for the block.
+	 */
+	protected function get_layout_styles( $block_metadata ) {
+		$block_rules           = '';
+		$selector              = isset( $block_metadata['selector'] ) ? $block_metadata['selector'] : '';
+		$has_block_gap_support = _wp_array_get( $this->theme_json, array( 'settings', 'spacing', 'blockGap' ) ) !== null;
+		// TODO: We might still need to output rules if blockGap isn't enabled — for example, for fallback gap on flex layout blocks.
+		if ( $has_block_gap_support ) {
+			if ( static::ROOT_BLOCK_SELECTOR === $selector ) {
+				$block_gap_value = _wp_array_get( $this->theme_json, array( 'styles', 'spacing', 'blockGap' ), '0.5em' );
+			} else {
+				$block_gap_value = _wp_array_get( $block_metadata, array( 'spacing', 'blockGap' ), '0.5em' );
+			}
+
+			$layout_definitions = _wp_array_get( $this->theme_json, array( 'settings', 'layout', 'definitions' ), array() );
+
+			if ( $block_gap_value ) {
+				foreach( $layout_definitions as $layout_key => $layout_definition ) {
+					$declaration_layouts = array();
+					if( ! empty( $layout_definition['blockGapSelector'] ) && ! empty( $layout_definition['blockGapProp'] ) ) {
+						$declaration_layouts[] = array(
+							'name'  => $layout_definition['blockGapProp'],
+							'value' => $block_gap_value,
+						);
+						$layout_selector = static::ROOT_BLOCK_SELECTOR === $selector ?
+							$selector . ' ' . $layout_definition['blockGapSelector'] :
+							$selector . $layout_definition['blockGapSelector'];
+						$block_rules    .= static::to_ruleset( $layout_selector, $declaration_layouts );
+					}
+				}
+			}
+		}
 		return $block_rules;
 	}
 }
