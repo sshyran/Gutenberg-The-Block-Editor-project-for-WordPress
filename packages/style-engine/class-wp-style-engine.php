@@ -304,7 +304,7 @@ class WP_Style_Engine {
 		$style_properties = $style_definition['properties'];
 
 		// Default rule builder.
-		// If the input contains an array, ee assume box model-like properties
+		// If the input contains an array, we assume box model-like properties
 		// for styles such as margins and padding.
 		if ( is_array( $style_value ) ) {
 			foreach ( $style_value as $key => $value ) {
