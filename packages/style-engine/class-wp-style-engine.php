@@ -46,31 +46,31 @@ class WP_Style_Engine {
 	const BLOCK_STYLE_DEFINITIONS_METADATA = array(
 		'color'      => array(
 			'text'       => array(
-				'properties' => array(
+				'property_keys' => array(
 					'default' => 'color',
 				),
-				'path'       => array( 'color', 'text' ),
-				'classnames' => array(
+				'path'          => array( 'color', 'text' ),
+				'classnames'    => array(
 					'has-text-color'  => true,
 					'has-$slug-color' => 'color',
 				),
 			),
 			'background' => array(
-				'properties' => array(
+				'property_keys' => array(
 					'default' => 'background-color',
 				),
-				'path'       => array( 'color', 'background' ),
-				'classnames' => array(
+				'path'          => array( 'color', 'background' ),
+				'classnames'    => array(
 					'has-background'             => true,
 					'has-$slug-background-color' => 'color',
 				),
 			),
 			'gradient'   => array(
-				'properties' => array(
+				'property_keys' => array(
 					'default' => 'background',
 				),
-				'path'       => array( 'color', 'gradient' ),
-				'classnames' => array(
+				'path'          => array( 'color', 'gradient' ),
+				'classnames'    => array(
 					'has-background'                => true,
 					'has-$slug-gradient-background' => 'gradient',
 				),
@@ -78,60 +78,60 @@ class WP_Style_Engine {
 		),
 		'border'     => array(
 			'color'  => array(
-				'properties' => array(
+				'property_keys' => array(
 					'default' => 'border-color',
-					'sides'   => 'border-%s-color',
+					'single'  => 'border-%s-color',
 				),
-				'path'       => array( 'border', 'color' ),
-				'classnames' => array(
+				'path'          => array( 'border', 'color' ),
+				'classnames'    => array(
 					'has-border-color'       => true,
 					'has-$slug-border-color' => 'color',
 				),
 			),
 			'radius' => array(
-				'properties' => array(
+				'property_keys' => array(
 					'default' => 'border-radius',
-					'sides'   => 'border-%s-radius',
+					'single'  => 'border-%s-radius',
 				),
-				'path'       => array( 'border', 'radius' ),
+				'path'          => array( 'border', 'radius' ),
 			),
 			'style'  => array(
-				'properties' => array(
+				'property_keys' => array(
 					'default' => 'border-style',
-					'sides'   => 'border-%s-style',
+					'single'  => 'border-%s-style',
 				),
-				'path'       => array( 'border', 'style' ),
+				'path'          => array( 'border', 'style' ),
 			),
 			'width'  => array(
-				'properties' => array(
+				'property_keys' => array(
 					'default' => 'border-width',
-					'sides'   => 'border-%s-width',
+					'single'  => 'border-%s-width',
 				),
-				'path'       => array( 'border', 'width' ),
+				'path'          => array( 'border', 'width' ),
 			),
 			'top'    => array(
-				'value_func' => 'static::get_css_side_rules',
+				'value_func' => 'static::get_css_single_property_rules',
 				'path'       => array( 'border', 'top' ),
 				'css_vars'   => array(
 					'color' => '--wp--preset--color--$slug',
 				),
 			),
 			'right'  => array(
-				'value_func' => 'static::get_css_side_rules',
+				'value_func' => 'static::get_css_single_property_rules',
 				'path'       => array( 'border', 'right' ),
 				'css_vars'   => array(
 					'color' => '--wp--preset--color--$slug',
 				),
 			),
 			'bottom' => array(
-				'value_func' => 'static::get_css_side_rules',
+				'value_func' => 'static::get_css_single_property_rules',
 				'path'       => array( 'border', 'bottom' ),
 				'css_vars'   => array(
 					'color' => '--wp--preset--color--$slug',
 				),
 			),
 			'left'   => array(
-				'value_func' => 'static::get_css_side_rules',
+				'value_func' => 'static::get_css_single_property_rules',
 				'path'       => array( 'border', 'left' ),
 				'css_vars'   => array(
 					'color' => '--wp--preset--color--$slug',
@@ -140,74 +140,74 @@ class WP_Style_Engine {
 		),
 		'spacing'    => array(
 			'padding' => array(
-				'properties' => array(
+				'property_keys' => array(
 					'default' => 'padding',
-					'sides'   => 'padding-%s',
+					'single'  => 'padding-%s',
 				),
-				'path'       => array( 'spacing', 'padding' ),
+				'path'          => array( 'spacing', 'padding' ),
 			),
 			'margin'  => array(
-				'properties' => array(
+				'property_keys' => array(
 					'default' => 'margin',
-					'sides'   => 'margin-%s',
+					'single'  => 'margin-%s',
 				),
-				'path'       => array( 'spacing', 'margin' ),
+				'path'          => array( 'spacing', 'margin' ),
 			),
 		),
 		'typography' => array(
 			'fontSize'       => array(
-				'properties' => array(
+				'property_keys' => array(
 					'default' => 'font-size',
 				),
-				'path'       => array( 'typography', 'fontSize' ),
-				'classnames' => array(
+				'path'          => array( 'typography', 'fontSize' ),
+				'classnames'    => array(
 					'has-$slug-font-size' => 'font-size',
 				),
 			),
 			'fontFamily'     => array(
-				'properties' => array(
+				'property_keys' => array(
 					'default' => 'font-family',
 				),
-				'path'       => array( 'typography', 'fontFamily' ),
-				'classnames' => array(
+				'path'          => array( 'typography', 'fontFamily' ),
+				'classnames'    => array(
 					'has-$slug-font-family' => 'font-family',
 				),
 			),
 			'fontStyle'      => array(
-				'properties' => array(
+				'property_keys' => array(
 					'default' => 'font-style',
 				),
-				'path'       => array( 'typography', 'fontStyle' ),
+				'path'          => array( 'typography', 'fontStyle' ),
 			),
 			'fontWeight'     => array(
-				'properties' => array(
+				'property_keys' => array(
 					'default' => 'font-weight',
 				),
-				'path'       => array( 'typography', 'fontWeight' ),
+				'path'          => array( 'typography', 'fontWeight' ),
 			),
 			'lineHeight'     => array(
-				'properties' => array(
+				'property_keys' => array(
 					'default' => 'line-height',
 				),
-				'path'       => array( 'typography', 'lineHeight' ),
+				'path'          => array( 'typography', 'lineHeight' ),
 			),
 			'textDecoration' => array(
-				'properties' => array(
+				'property_keys' => array(
 					'default' => 'text-decoration',
 				),
-				'path'       => array( 'typography', 'textDecoration' ),
+				'path'          => array( 'typography', 'textDecoration' ),
 			),
 			'textTransform'  => array(
-				'properties' => array(
+				'property_keys' => array(
 					'default' => 'text-transform',
 				),
-				'path'       => array( 'typography', 'textTransform' ),
+				'path'          => array( 'typography', 'textTransform' ),
 			),
 			'letterSpacing'  => array(
-				'properties' => array(
+				'property_keys' => array(
 					'default' => 'letter-spacing',
 				),
-				'path'       => array( 'typography', 'letterSpacing' ),
+				'path'          => array( 'typography', 'letterSpacing' ),
 			),
 		),
 	);
@@ -301,14 +301,14 @@ class WP_Style_Engine {
 			return $rules;
 		}
 
-		$style_properties = $style_definition['properties'];
+		$style_properties = $style_definition['property_keys'];
 
 		// Default rule builder.
 		// If the input contains an array, we assume box model-like properties
 		// for styles such as margins and padding.
 		if ( is_array( $style_value ) ) {
 			foreach ( $style_value as $key => $value ) {
-				$side_property           = sprintf( $style_properties['sides'], _wp_to_kebab_case( $key ) );
+				$side_property           = sprintf( $style_properties['single'], _wp_to_kebab_case( $key ) );
 				$rules[ $side_property ] = $value;
 			}
 		} else {
@@ -381,26 +381,29 @@ class WP_Style_Engine {
 	}
 
 	/**
-	 * Style value parser that returns a CSS ruleset for style groups that have 'top', 'right', 'bottom', 'left' keys.
-	 * E.g., `border.top{color|width|style}.
+	 * Style value parser that returns a CSS ruleset of style properties for style definition groups
+	 * that have keys representing single (or individual) style properties, otherwise known as longhand CSS properties.
+	 * e.g., "$style_property-$single_feature: $value;", which could represent the following:
+	 * "border-{top|right|bottom|left}-{color|width|style}: {value};" or,
+	 * "border-image-{outset|source|width|repeat|slice}: {value};"
 	 *
-	 * @param array $style_value           A single raw Gutenberg style attributes value for a CSS property.
-	 * @param array $side_style_definition A single style definition from BLOCK_STYLE_DEFINITIONS_METADATA.
+	 * @param array $style_value             A single raw Gutenberg style attributes value for a CSS property.
+	 * @param array $single_style_definition A single style definition from BLOCK_STYLE_DEFINITIONS_METADATA.
 	 *
 	 * @return array The class name for the added style.
 	 */
-	protected static function get_css_side_rules( $style_value, $side_style_definition ) {
+	protected static function get_css_single_property_rules( $style_value, $single_style_definition ) {
 		$rules = array();
 
-		if ( ! is_array( $style_value ) || empty( $style_value ) || empty( $side_style_definition['path'] ) ) {
+		if ( ! is_array( $style_value ) || empty( $style_value ) || empty( $single_style_definition['path'] ) ) {
 			return $rules;
 		}
 
-		// The first item in $side_style_definition['path'] array tells us the style property, e.g., "border".
+		// The first item in $single_style_definition['path'] array tells us the style property, e.g., "border".
 		// We use this to get a corresponding CSS style definition such as "color" or "width" from the same group.
-		// The second item in $side_style_definition['path'] array refers to the side property, e.g., "top".
-		$definition_group_key = $side_style_definition['path'][0];
-		$side                 = $side_style_definition['path'][1];
+		// The second item in $single_style_definition['path'] array refers to the side property, e.g., "top".
+		$definition_group_key = $single_style_definition['path'][0];
+		$single_property      = $single_style_definition['path'][1];
 
 		foreach ( $style_value as $css_property => $value ) {
 			if ( empty( $value ) ) {
@@ -411,18 +414,18 @@ class WP_Style_Engine {
 			$style_definition_path = array( $definition_group_key, $css_property );
 			$style_definition      = _wp_array_get( self::BLOCK_STYLE_DEFINITIONS_METADATA, $style_definition_path, null );
 
-			if ( $style_definition && isset( $style_definition['properties']['sides'] ) ) {
+			if ( $style_definition && isset( $style_definition['property_keys']['single'] ) ) {
 				// Set a CSS var if there is a valid preset value.
-				$slug = isset( $side_style_definition['css_vars'][ $css_property ] ) ? static::get_slug_from_preset_value( $value, $css_property ) : null;
+				$slug = isset( $single_style_definition['css_vars'][ $css_property ] ) ? static::get_slug_from_preset_value( $value, $css_property ) : null;
 				if ( $slug ) {
 					$css_var = strtr(
-						$side_style_definition['css_vars'][ $css_property ],
+						$single_style_definition['css_vars'][ $css_property ],
 						array( '$slug' => $slug )
 					);
 					$value   = "var($css_var)";
 				}
-				$side_css_property           = sprintf( $style_definition['properties']['sides'], $side );
-				$rules[ $side_css_property ] = $value;
+				$single_css_property           = sprintf( $style_definition['property_keys']['single'], $single_property );
+				$rules[ $single_css_property ] = $value;
 			}
 		}
 		return $rules;
