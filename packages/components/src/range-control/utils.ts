@@ -1,4 +1,3 @@
-// @ts-nocheck
 /**
  * External dependencies
  */
@@ -13,6 +12,10 @@ import { useCallback, useRef, useEffect, useState } from '@wordpress/element';
  * Internal dependencies
  */
 import { useControlledState } from '../utils/hooks';
+import type {
+	useControlledRangeValueProps,
+	useControlledRangeValueReturn,
+} from './types';
 
 /**
  * A float supported clamp function for a specific value.
@@ -21,24 +24,24 @@ import { useControlledState } from '../utils/hooks';
  * @param {number}      min   The minimum value.
  * @param {number}      max   The maximum value.
  *
- * @return {number} A (float) number
+ * @return {number | null} A (float) number
  */
-export function floatClamp( value, min, max ) {
+export function floatClamp( value: number | null, min: number, max: number ) {
 	if ( typeof value !== 'number' ) {
 		return null;
 	}
 
-	return parseFloat( clamp( value, min, max ) );
+	return parseFloat( `${ clamp( value, min, max ) }` );
 }
 
 /**
  * Hook to store a clamped value, derived from props.
  *
- * @param {Object} settings         Hook settings.
- * @param {number} settings.min     The minimum value.
- * @param {number} settings.max     The maximum value.
- * @param {number} settings.value   The current value.
- * @param {any}    settings.initial The initial value.
+ * @param {Object}        settings         Hook settings.
+ * @param {number}        settings.min     The minimum value.
+ * @param {number}        settings.max     The maximum value.
+ * @param {number | null} settings.value   The current value.
+ * @param {any}           settings.initial The initial value.
  *
  * @return {[*, Function]} The controlled value and the value setter.
  */
@@ -47,7 +50,7 @@ export function useControlledRangeValue( {
 	max,
 	value: valueProp,
 	initial,
-} ) {
+}: useControlledRangeValueProps ): useControlledRangeValueReturn {
 	const [ state, setInternalState ] = useControlledState(
 		floatClamp( valueProp, min, max ),
 		{ initial, fallback: null }
@@ -88,13 +91,13 @@ export function useDebouncedHoverInteraction( {
 	timeout = 300,
 } ) {
 	const [ show, setShow ] = useState( false );
-	const timeoutRef = useRef();
+	const timeoutRef = useRef< number | undefined >();
 
 	const setDebouncedTimeout = useCallback(
 		( callback ) => {
 			window.clearTimeout( timeoutRef.current );
 
-			timeoutRef.current = setTimeout( callback, timeout );
+			timeoutRef.current = window.setTimeout( callback, timeout );
 		},
 		[ timeout ]
 	);
