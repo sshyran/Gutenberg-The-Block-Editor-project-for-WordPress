@@ -38,7 +38,7 @@ import {
 import type { WordPressComponentProps } from '../ui/context';
 import type { RangeControlProps } from './types';
 
-function RangeControl< P >(
+function UnforwardedRangeControl< P >(
 	props: WordPressComponentProps< RangeControlProps< P >, 'div' >,
 	ref: ForwardedRef< HTMLDivElement >
 ) {
@@ -130,7 +130,10 @@ function RangeControl< P >(
 		!! marks && 'is-marked'
 	);
 
-	const id = useInstanceId( RangeControl, 'inspector-range-control' );
+	const id = useInstanceId(
+		UnforwardedRangeControl,
+		'inspector-range-control'
+	);
 	const describedBy = !! help ? `${ id }__help` : undefined;
 	const enableTooltip = showTooltipProp !== false && isFinite( value );
 
@@ -345,6 +348,6 @@ function RangeControl< P >(
  * };
  * ```
  */
-export const ForwardedComponent = forwardRef( RangeControl );
+export const RangeControl = forwardRef( UnforwardedRangeControl );
 
-export default ForwardedComponent;
+export default RangeControl;
