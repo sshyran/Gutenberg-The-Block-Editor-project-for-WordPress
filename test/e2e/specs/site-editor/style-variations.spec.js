@@ -64,10 +64,10 @@ test.describe( 'Global styles variations', () => {
 			 ).jsonValue()
 		).not.toContain( 'is-active' );
 	} );
-	test( 'Should apply preset colors and font sizes in a variation', async () => {} );
-	test( 'Should apply custom colors and font sizes in a variation', async () => {} );
-	test( 'Should apply a color palette in a variation', async () => {} );
-	test( 'Should reflect style variations in the styles applied to the editor', async () => {} );
+	// test( 'Should apply preset colors and font sizes in a variation', async () => {} );
+	// test( 'Should apply custom colors and font sizes in a variation', async () => {} );
+	// test( 'Should apply a color palette in a variation', async () => {} );
+	// test( 'Should reflect style variations in the styles applied to the editor', async () => {} );
 } );
 
 class SiteEditorStyleVariations {
