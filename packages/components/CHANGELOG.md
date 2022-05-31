@@ -26,6 +26,7 @@
 -   `TextareaControl`: Convert to TypeScript ([#41215](https://github.com/WordPress/gutenberg/pull/41215)).
 -   `BoxControl`: Update unit tests to use `@testing-library/user-event` ([#41422](https://github.com/WordPress/gutenberg/pull/41422)).
 -   `Surface`: Convert to TypeScript ([#41212](https://github.com/WordPress/gutenberg/pull/41212)).
+-   `DateDayPicker`: Update unit tests to use `@testing-library/user-event` ([#41470](https://github.com/WordPress/gutenberg/pull/41470)).
 
 ### Experimental
 
