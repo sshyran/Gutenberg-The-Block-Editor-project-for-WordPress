@@ -31,6 +31,13 @@ class WP_Style_Engine {
 	private static $instance = null;
 
 	/**
+	 * Registered styles.
+	 *
+	 * @var WP_Style_Engine_Store|null
+	 */
+	private $block_supports_store = null;
+
+	/**
 	 * Style definitions that contain the instructions to
 	 * parse/output valid Gutenberg styles from a block's attributes.
 	 * For every style definition, the follow properties are valid:
@@ -120,6 +127,13 @@ class WP_Style_Engine {
 	);
 
 	/**
+	 * Gather internals.
+	 */
+	public function __construct() {
+		$this->block_supports_store = new WP_Style_Engine_Store( 'block_supports' );
+	}
+
+	/**
 	 * Utility method to retrieve the main instance of the class.
 	 *
 	 * The instance will be created if it does not exist yet.
@@ -132,6 +146,19 @@ class WP_Style_Engine {
 		}
 
 		return self::$instance;
+	}
+
+	/**
+	 * Global public interface to register block support styles support.
+	 *
+	 * @access private
+	 *
+	 * @param string $key Unique key for a $style_data object.
+	 * @param array  $style_data Associative array of style information.
+	 * @return void
+	 */
+	public function register_block_support_styles( $key, $style_data ) {
+		$this->block_supports_store->register( $key, $style_data );
 	}
 
 	/**
@@ -204,20 +231,21 @@ class WP_Style_Engine {
 	 * Styles are bundled based on the instructions in BLOCK_STYLE_DEFINITIONS_METADATA.
 	 *
 	 * @param array $block_styles An array of styles from a block's attributes.
-	 *
+	 * @param array $options array(
+	 *     'selector'                     => (string) When a selector is passed, `generate()` will return a full CSS rule `$selector { ...rules }`, otherwise a concatenated string of properties and values.
+	 * );.
 	 * @return array|null array(
 	 *     'styles'     => (string) A CSS ruleset formatted to be placed in an HTML `style` attribute or tag.
 	 *     'classnames' => (string) Classnames separated by a space.
 	 * );
 	 */
-	public function generate( $block_styles ) {
+	public function generate( $block_styles, $options ) {
 		if ( empty( $block_styles ) || ! is_array( $block_styles ) ) {
 			return null;
 		}
 
 		$css_rules     = array();
 		$classnames    = array();
-		$styles_output = array();
 
 		// Collect CSS and classnames.
 		foreach ( self::BLOCK_STYLE_DEFINITIONS_METADATA as $definition_group ) {
@@ -234,7 +262,10 @@ class WP_Style_Engine {
 		}
 
 		// Build CSS rules output.
-		$css_output = '';
+		$selector      = isset( $options['selector'] ) ? $options['selector'] : null;
+		$css           = array();
+		$styles_output = array();
+
 		if ( ! empty( $css_rules ) ) {
 			// Generate inline style rules.
 			// In the future there might be a flag in the option to output
@@ -242,13 +273,22 @@ class WP_Style_Engine {
 			foreach ( $css_rules as $rule => $value ) {
 				$filtered_css = esc_html( safecss_filter_attr( "{$rule}: {$value}" ) );
 				if ( ! empty( $filtered_css ) ) {
-					$css_output .= $filtered_css . '; ';
+					$css[] = $filtered_css . ';';
 				}
 			}
 		}
 
-		if ( ! empty( $css_output ) ) {
-			$styles_output['css'] = trim( $css_output );
+		// Return css, if any.
+		if ( ! empty( $css ) ) {
+			// Return an entire rule if there is a selector.
+			if ( $selector ) {
+				$style_block          = "$selector { ";
+				$style_block         .= implode( ' ', $css );
+				$style_block         .= ' }';
+				$styles_output['css'] = $style_block;
+			} else {
+				$styles_output['css'] = implode( ' ', $css );
+			}
 		}
 
 		if ( ! empty( $classnames ) ) {
@@ -294,6 +334,8 @@ class WP_Style_Engine {
  * Returns an CSS ruleset.
  * Styles are bundled based on the instructions in BLOCK_STYLE_DEFINITIONS_METADATA.
  *
+ * @access public
+ *
  * @param array $block_styles An array of styles from a block's attributes.
  *
  * @return array|null array(
@@ -308,3 +350,21 @@ function wp_style_engine_generate( $block_styles ) {
 	}
 	return null;
 }
+
+// @TODO Just testing!
+/**
+ * Global public interface to register block support styles support.
+ *
+ * @access public
+ *
+ * @param string $key Unique key for a $style_data object.
+ * @param array  $style_data Associative array of style information.
+ * @return void
+ */
+function wp_style_engine_register_block_support_styles( $key, $style_data ) {
+	if ( class_exists( 'WP_Style_Engine' ) ) {
+		$style_engine = WP_Style_Engine::get_instance();
+		$style_engine->register_block_support_styles( $key, $style_data );
+	}
+}
+
