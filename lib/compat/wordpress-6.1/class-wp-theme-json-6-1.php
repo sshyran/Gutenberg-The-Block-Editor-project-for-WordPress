@@ -257,7 +257,7 @@ class WP_Theme_JSON_6_1 extends WP_Theme_JSON_6_0 {
 					$block_rules .= '.wp-site-blocks > * { margin-block-start: 0; margin-block-end: 0; }';
 					$block_rules .= ".wp-site-blocks > * + * { margin-block-start: $block_gap_value; }";
 					// For backwards compatibility, ensure the legacy block gap CSS variable is still available.
-					$block_rules .= "$selector { --wp--style--block-gap: $block_gap_value }";
+					$block_rules .= "$selector { --wp--style--block-gap: $block_gap_value; }";
 				}
 
 				// Get root-level layout block gap styles.
