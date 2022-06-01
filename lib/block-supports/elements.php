@@ -116,8 +116,6 @@ function gutenberg_render_elements_support_styles( $pre_render, $block ) {
 		return null;
 	}
 
-	$style = '';
-
 	$class_name = gutenberg_get_elements_class_name( $block );
 
 	if ( strpos( $link_color, 'var:preset|color|' ) !== false ) {
