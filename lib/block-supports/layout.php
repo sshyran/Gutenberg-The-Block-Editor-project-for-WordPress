@@ -181,7 +181,7 @@ function gutenberg_render_layout_support_flag( $block_content, $block ) {
 	$block_classname  = wp_get_block_default_classname( $block['blockName'] );
 	$container_class  = wp_unique_id( 'wp-container-' );
 	$layout_classname = '';
-	$class_names      = array( $block_classname, $container_class );
+	$class_names      = array( $container_class );
 
 	if ( isset( $used_layout['type'] ) ) {
 		$layout_classname = _wp_array_get( $default_layout, array( 'definitions', $used_layout['type'], 'className' ), '' );
